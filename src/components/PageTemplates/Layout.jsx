@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { connect } from 'react-redux';
 import { isNil } from 'ramda';
-import {injectGlobal} from 'styled-components';
+import { injectGlobal } from 'styled-components';
 import styled from 'styled-components';
-
+import { clearAllAlerts } from 'state/notifications';
+import Snackbar from 'material-ui/Snackbar';
 import Mask from 'components/Mask/Mask';
 
 const App = styled.div`
@@ -65,27 +66,49 @@ injectGlobal`
 }
 `;
 
-const Layout = ({ children, mask }) => {
+const Alerts = styled(Snackbar) `
+  div {
+    color: white;
+    background-color: ${props => (props['data-alerttype'] === 'error' ? 'red' : 'green')} !important;
+  }
+`;
+
+const Layout = ({ alert, children, clearAlerts, mask }) => {
+  console.log(alert);
   return (
     <App>
       <MuiThemeProvider>
         <Wrapper>
           {children}
           {!isNil(mask) && !isNil(mask.message) && <Mask key={mask.message} message={mask.message} />}
+          <Alerts
+            data-alerttype={alert ? alert.type : null}
+            open={!isNil(alert)}
+            message={alert ? alert.message : ''}
+            autoHideDuration={3000}
+            onRequestClose={clearAlerts}
+          />
         </Wrapper>
       </MuiThemeProvider>
     </App>
   );
 };
 Layout.propTypes = {
+  alert: PropTypes.object,
   children: PropTypes.any,
+  clearAlerts: PropTypes.func.isRequired,
   mask: PropTypes.object,
 };
 
 const mapStateToProps = state => {
   return {
+    alert: state.notifications.alert,
     mask: state.notifications.mask,
   };
 };
+const mapDispatchToProps = dispatch => ({
+  clearAlerts: () => dispatch(clearAllAlerts()),
+});
 
-export default connect(mapStateToProps)(Layout);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);
