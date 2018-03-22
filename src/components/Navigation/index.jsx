@@ -5,8 +5,9 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
+import FontIcon from 'material-ui/FontIcon';
 
-const Navigation = ({ onLogout }) => {
+const Navigation = ({ onLogout, onGoHome }) => {
   const MenuItems = () => (
     <IconMenu
       iconButtonElement={
@@ -21,11 +22,13 @@ const Navigation = ({ onLogout }) => {
   return (
     <AppBar
       title="Bloomburger"
+      iconElementLeft={<IconButton onClick={onGoHome}><FontIcon className="material-icons">home</FontIcon></IconButton>}
       iconElementRight={<MenuItems />}
     />
   );
 }
 Navigation.propTypes = {
-  onLogout: PropTypes.func.isRequired
+  onLogout: PropTypes.func.isRequired,
+  onGoHome: PropTypes.func.isRequired,
 };
 export default Navigation;

@@ -74,7 +74,6 @@ const Alerts = styled(Snackbar) `
 `;
 
 const Layout = ({ alert, children, clearAlerts, mask }) => {
-  console.log(alert);
   return (
     <App>
       <MuiThemeProvider>

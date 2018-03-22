@@ -69,7 +69,6 @@ const update = githubUser => {
  * @return {object} The upserted user
  */
 const upsert = githubUser => {
-  console.log(JSON.stringify(githubUser, null, 2));
   return pg('bloomburger_user')
     .where({id: githubUser.id})
     .select()

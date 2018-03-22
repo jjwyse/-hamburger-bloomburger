@@ -6,6 +6,7 @@ import { isNil } from 'ramda';
 
 import { upsert } from './db/user';
 import logger from './logger';
+import blogs from './api/blogs';
 
 const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
 const SECRET = fs.readFileSync('private.key');
@@ -110,7 +111,8 @@ const authMiddleware = (req, res, next) => {
       return res.json({ error: 'Bearer token has expired' });
     }
 
-    req.user = decodedJwt.user;
+    logger.log(`Setting user on request to user: ${JSON.stringify(decodedJwt.bloomburgerUser)}`);
+    req.user = decodedJwt.bloomburgerUser;
     return next();
   };
 
@@ -119,16 +121,18 @@ const authMiddleware = (req, res, next) => {
   return jwt.verify(token, SECRET, onJwtDecoded);
 };
 
-const blogs = (req, res) => res.json([{ id: 1, name: 'foo', content: '## Hello, World' }]).status(200);
-
 /**
  * Top level function that defines what functions will handle what API requests
  * @param {object} expressApp The express app to add any API definitions to
  */
 const init = expressApp => {
   expressApp.use(bodyParser.json());
+
+  // authentication APIs
   expressApp.post('/api/v1/oauth', authenticate);
-  expressApp.get('/api/v1/blogs', authMiddleware, blogs);
+
+  // setup blog APIs
+  blogs(expressApp, authMiddleware);
 };
 
 export default init;

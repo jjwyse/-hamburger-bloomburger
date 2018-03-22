@@ -4,6 +4,7 @@ import {Route, IndexRoute} from 'react-router';
 import Login from 'pages/Login/Login';
 
 import Blogs from 'pages/Blogs/Blogs';
+import Blog from 'pages/Blogs/Blog';
 
 import Profile from 'pages/Settings/Profile';
 
@@ -21,6 +22,7 @@ export default (
     <Route component={IsUserAuthenticated(LoggedInTemplate)}>
       <IndexRoute component={Blogs} />
       <Route path="/blogs" component={Blogs} />
+      <Route path="/blogs/:blogId" component={Blog} />
       <Route path="/profile" component={Profile} />
     </Route>
 

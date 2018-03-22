@@ -3,10 +3,7 @@ import path from 'path';
 import api from './api';
 
 /**
- * middleware.js
- * Loads the proper middleware for each environment
- * This is a modified version of react-boilerplate's middleware
- * https://github.com/mxstbr/react-boilerplate/blob/master/server/middlewares/frontendMiddleware.js
+ * Inspired by react-boilerplate's middleware
  */
 const addDevMiddleware = (app, webpackConfig) => {
   const webpack = require('webpack');
