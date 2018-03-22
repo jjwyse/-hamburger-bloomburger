@@ -11,12 +11,14 @@ import Layout from 'components/PageTemplates/Layout';
 import LoggedInTemplate from 'components/PageTemplates/LoggedInTemplate';
 import NotFound from 'pages/NotFound';
 
+import IsUserAuthenticated from 'components/HoC/IsUserAuthenticated';
+
 export default (
   <Route path="/" component={Layout}>
     <Route path="/login" component={Login} />
 
     // All routes below require authentication
-    <Route component={LoggedInTemplate}>
+    <Route component={IsUserAuthenticated(LoggedInTemplate)}>
       <IndexRoute component={Blogs} />
       <Route path="/blogs" component={Blogs} />
       <Route path="/profile" component={Profile} />

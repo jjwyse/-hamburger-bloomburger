@@ -2,11 +2,10 @@ import jsdom from 'jsdom';
 
 const mockery = require('mockery');
 mockery.registerMock('properties', {
-  googleMapsKey: '',
   githubClientId: 0,
   githubClientSecret: '',
   redirectUri: 'http://localhost:3003/login',
-  dbConnectionString: `postgres://${process.env.BLOOMBURGER_DB_USER}@${process.env.BLOOMBURGER_DB_HOST}:${process.env.BLOOMBURGER_DB_PORT}/bloomburger?connect_timeout=10&application_name=myapp`,
+  dbConnectionString: `postgres://${process.env.BLOOMBURGER_DB_USER}@${process.env.BLOOMBURGER_DB_HOST}:${process.env.BLOOMBURGER_DB_PORT}/bloomburger?connect_timeout=10&application_name=bloomburger`,
 });
 mockery.registerMock('server/db/pg', () => {
   return {
@@ -15,7 +14,7 @@ mockery.registerMock('server/db/pg', () => {
 });
 mockery.enable({warnOnReplace: false, warnOnUnregistered: false});
 
-// Set up testing evnvironment to run like a browser in the command line
+// Set up testing environment to run like a browser in the command line
 // global in node same as window.document
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
 global.window = global.document.defaultView;

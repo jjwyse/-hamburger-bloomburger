@@ -20,9 +20,8 @@ const createUserAndToken = githubUser => {
   return upsert(githubUser)
     .then(bloomburgerUser => {
       logger.log(`Creating JWT token for bloomburger user: ${bloomburgerUser.id}`);
-      const user = { github: { ...githubUser, access_token: null }, ...bloomburgerUser };
-      const jwtToken = jwt.sign({ user }, SECRET, { expiresIn: SEVEN_DAYS_IN_SECONDS });
-      return { ...user, token: jwtToken };
+      const jwtToken = jwt.sign({ bloomburgerUser }, SECRET, { expiresIn: SEVEN_DAYS_IN_SECONDS });
+      return { ...bloomburgerUser, token: jwtToken };
     });
 };
 
@@ -33,8 +32,8 @@ const createUserAndToken = githubUser => {
  */
 const authenticate = (req, res) => {
   const { code } = req.body;
-  const clientSecret = process.env.bloomburger_github_CLIENT_SECRET;
-  const clientId = process.env.bloomburger_github_CLIENT_ID;
+  const clientSecret = process.env.BLOOMBURGER_GITHUB_CLIENT_SECRET;
+  const clientId = process.env.BLOOMBURGER_GITHUB_CLIENT_ID;
 
   const config = {
     method: 'post',
@@ -55,7 +54,27 @@ const authenticate = (req, res) => {
           return null;
         }
 
-        return createUserAndToken(json).then(user => res.json(user));
+        const accessToken = json.access_token;
+        const userConfig = {
+          method: 'get',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'User-Agent': 'bloomburger',
+          }
+        };
+        return fetch('https://api.github.com/user', userConfig)
+          .then(userResponse => {
+            return userResponse.json().then(userJson => {
+              if (!userResponse.ok) {
+                res.status(502).json(userJson);
+                return null;
+              }
+
+              return createUserAndToken({ ...userJson, access_token: accessToken }).then(user => res.json(user));
+            });
+          });
       });
     })
     .catch(e => {
@@ -109,7 +128,7 @@ const blogs = (req, res) => res.json([{ id: 1, name: 'foo', content: '## Hello, 
 const init = expressApp => {
   expressApp.use(bodyParser.json());
   expressApp.post('/api/v1/oauth', authenticate);
-  expressApp.get('/api/v1/blogs', blogs);
+  expressApp.get('/api/v1/blogs', authMiddleware, blogs);
 };
 
 export default init;

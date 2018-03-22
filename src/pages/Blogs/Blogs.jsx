@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import WithBlogs from 'components/With/WithBlogs';
+import WithBlogs from 'components/HoC/WithBlogs';
 
 class Blogs extends Component {
   render() {

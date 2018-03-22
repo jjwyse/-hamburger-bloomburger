@@ -7,18 +7,13 @@ import pg from './pg';
 import logger from '../logger';
 
 const toGithubDbUser = githubUser => ({
-  id: githubUser.athlete.id,
-  email_address: githubUser.athlete.email,
-  first_name: githubUser.athlete.firstname,
-  last_name: githubUser.athlete.lastname,
-  city: githubUser.athlete.city,
-  state: githubUser.athlete.state,
-  country: githubUser.athlete.country,
-  sex: githubUser.athlete.sex,
-  photo: githubUser.athlete.profile,
-  bearer_token: jwt.sign({access_token: githubUser.access_token}, SECRET)
+  id: githubUser.id,
+  username: githubUser.login,
+  name: githubUser.name,
+  bio: githubUser.bio,
+  photo: githubUser.avatar_url,
+  access_token: jwt.sign({access_token: githubUser.access_token}, SECRET)
 });
-
 
 /**
  * Creates a new user
@@ -26,17 +21,12 @@ const toGithubDbUser = githubUser => ({
  * @return {object} The newly created user
  */
 const create = (githubUser) => {
-  logger.log(`Creating github user: ${githubUser.id}`);
+  logger.log(`Creating github user with ID: ${githubUser.id}`);
   const newUser = toGithubDbUser(githubUser);
-  return pg('github_user')
-    .returning('id')
+  return pg('bloomburger_user')
     .insert(newUser)
-    .then(githubId => {
-      return pg('bloomburger_user')
-        .returning()
-        .insert({github_id: Number(githubId)})
-        .then(bloomburgerUser => bloomburgerUser);
-    });
+    .returning('*')
+    .then(createdUser => createdUser[0]);
 };
 
 /**
@@ -47,7 +37,6 @@ const create = (githubUser) => {
 const retrieve = (bloomburgerId) => {
   logger.log(`Loading user with id: ${bloomburgerId}`);
   return pg('bloomburger_user')
-    .innerJoin('github_user', 'github_user.id', 'bloomburger_user.github_id')
     .where({id: bloomburgerId})
     .select()
     .then(users => isNil(users) ? null : users[0]);
@@ -59,17 +48,17 @@ const retrieve = (bloomburgerId) => {
  * @return {object} The updated user
  */
 const update = githubUser => {
-  logger.log(`Updating github user: ${githubUser.athlete.id}`);
+  logger.log(`Updating github user: ${githubUser.id}`);
   const updateUser = toGithubDbUser(githubUser);
-  return pg('github_user')
+  return pg('bloomburger_user')
     .returning()
-    .where('id', '=', githubUser.athlete.id)
+    .where('id', '=', githubUser.id)
     .update(updateUser)
     .then(() => {
       return pg('bloomburger_user')
-        .returning(['id', 'github_id', 'last_login'])
-        .where('github_id', '=', githubUser.athlete.id)
-        .update({github_id: githubUser.athlete.id})
+        .returning(['id', 'last_login'])
+        .where('id', '=', githubUser.id)
+        .update({id: githubUser.id})
         .then(bloomburgerUsers => bloomburgerUsers[0]);
     });
 };
@@ -80,8 +69,9 @@ const update = githubUser => {
  * @return {object} The upserted user
  */
 const upsert = githubUser => {
-  return pg('github_user')
-    .where({id: githubUser.athlete.id})
+  console.log(JSON.stringify(githubUser, null, 2));
+  return pg('bloomburger_user')
+    .where({id: githubUser.id})
     .select()
     .then(user => {
       return isNil(user) || user.length <= 0 ?

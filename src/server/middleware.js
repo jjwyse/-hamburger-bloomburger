@@ -65,7 +65,7 @@ const addDevMiddleware = (app, webpackConfig) => {
 
   app.use('/assets/css', express.static(path.resolve(__dirname, '../../dist/assets/css')));
   app.use('/assets/img', express.static(path.resolve(__dirname, '../../dist/assets/img')));
-  app.use('/assets/swagger', express.static(path.resolve(__dirname, '../../dist/assets/swagger')));
+  app.use('/assets/videos', express.static(path.resolve(__dirname, '../../dist/assets/videos')));
 
   app.get('*', (req, res, next) => {
     fs.readFile(path.join(compiler.outputPath, '../index.html'), (error, file) => {
