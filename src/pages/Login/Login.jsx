@@ -22,12 +22,15 @@ const Container = styled.div`
 `;
 
 const LoginContainer = styled.div`
-  position: fixed;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.5);
   color: #f1f1f1;
-  width: 100%;
+  min-width: 250px;
   text-align: right;
+  padding: 10px;
+  border-radius: 1px;
 `;
 
 const Video = styled.video`
@@ -36,6 +39,10 @@ const Video = styled.video`
   bottom: 0;
   min-width: 100%; 
   min-height: 100%;
+`;
+
+const Wrapper = styled.div`
+  padding: 10px;
 `;
 
 class Login extends Component {
@@ -68,14 +75,20 @@ class Login extends Component {
           <source src="/assets/videos/a-working-man.mp4" type="video/mp4" />
         </Video>
         <LoginContainer>
-          <h3><b>Bloomburger</b> | The blogs you care about, and nothing more. </h3>
-          <RaisedButton
-            href="https://github.com/callemall/material-ui"
-            target="_blank"
-            label="Login with Github"
-            onClick={onLoginWithGithub}
-            icon={<GitHubIcon />}
-          />
+          <Wrapper>
+            <span>
+              Bloomburger | <i>The blogs you care about, and nothing more.</i>
+            </span>
+          </Wrapper>
+          <Wrapper>
+            <RaisedButton
+              href="https://github.com/callemall/material-ui"
+              target="_blank"
+              label="Login"
+              onClick={onLoginWithGithub}
+              icon={<GitHubIcon />}
+            />
+          </Wrapper>
         </LoginContainer>
       </Container>
     );

@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Navigation from 'components/Navigation';
 import { connect } from 'react-redux';
 import { logoutUser } from 'state/authentication';
-import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import MenuItem from 'material-ui/MenuItem';
+import { push } from 'react-router-redux';
 
 const TemplateContainer = styled.div`
   width: 100vw;
@@ -15,25 +12,9 @@ const TemplateContainer = styled.div`
 `;
 
 const LoggedInTemplate = ({ children, logout }) => {
-  const MenuItems = (props) => (
-    <IconMenu
-      {...props}
-      iconButtonElement={
-        <IconButton><MoreVertIcon /></IconButton>
-      }
-      targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-    >
-      <MenuItem primaryText="Sign out" onClick={logout} />
-    </IconMenu>
-  );
   return (
     <TemplateContainer>
-      <AppBar
-        title="Bloomburger"
-        iconElementRight={<MenuItems />}
-      />
-
+      <Navigation onLogout={logout} />
       {children}
     </TemplateContainer>
   );
@@ -44,7 +25,10 @@ LoggedInTemplate.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(logoutUser())
+  logout: () => {
+    dispatch(logoutUser());
+    dispatch(push('/login'));
+  }
 });
 
 export default connect(null, mapDispatchToProps)(LoggedInTemplate);

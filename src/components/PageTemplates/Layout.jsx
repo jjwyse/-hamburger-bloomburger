@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {connect} from 'react-redux';
-import {isNil} from 'ramda';
+import { connect } from 'react-redux';
+import { isNil } from 'ramda';
+import {injectGlobal} from 'styled-components';
 import styled from 'styled-components';
 
 import Mask from 'components/Mask/Mask';
@@ -19,7 +20,52 @@ const Wrapper = styled.div`
   height: 100vh;
 `;
 
-const Layout = ({children, mask}) => {
+injectGlobal`
+  @font-face {
+  }
+  body {
+    margin: 0;
+    font-family: "Montserrat", "Open Sans", "Helvetica Neue", "Arial", "Helvetica", sans-serif;
+    font-weight: 400;
+    font-size: 100%;
+    line-height: 1.25rem;
+  }
+  body, h1, h2, h3, h4 {
+    font-size-adjust: 0.5;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Montserrat", "Ubuntu", "Helvetica Neue", "Arial", "Helvetica", sans-serif;
+    font-weight: 700;
+    margin: 1rem 0;
+  }
+  h1 {
+    font-size: 2rem;
+    margin: 1.3rem;
+    line-height: 2rem;
+  }
+  h2 {
+    font-size: 1.625rem;
+    line-height: 1.625rem;
+  }
+  h3 {
+    font-size: 1.375rem;
+    line-height: 1.375rem;
+  }
+  h4 {
+    font-size: 1.125rem;
+    line-height: 1.125rem;
+  }
+  h5, h6{
+    font-size: 1rem;
+  }
+  p{
+    line-height: 1.5rem;
+    font-size: 1.2rem;
+  }
+}
+`;
+
+const Layout = ({ children, mask }) => {
   return (
     <App>
       <MuiThemeProvider>
