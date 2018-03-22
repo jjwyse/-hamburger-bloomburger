@@ -7,12 +7,13 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: flex;
   padding: 10px;
+  flex-wrap: wrap;
 `;
 
 const BlogPost = styled.div`
   cursor: pointer;
-  min-width: 300px;
-  min-height: 150px;
+  width: 400px;
+  height: 150px;
   background-color: rgba(242, 244, 247, .8);
   color: black;
   margin: 10px;
