@@ -25,7 +25,6 @@ class Blogs extends Component {
     return (
       <Container>
         {blogs.map(blog => {
-          console.log(blog);
           return (
             <BlogPost onClick={() => router.push(`/blogs/${blog.id}`)} key={blog.id}>
               <h1>{blog.title}</h1>
