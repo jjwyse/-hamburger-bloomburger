@@ -7,7 +7,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
 
-const Navigation = ({ onLogout, onGoHome }) => {
+const Navigation = ({ onCreateBlog, onLogout, onGoHome }) => {
   const MenuItems = () => (
     <IconMenu
       iconButtonElement={
@@ -16,6 +16,7 @@ const Navigation = ({ onLogout, onGoHome }) => {
       targetOrigin={{ horizontal: 'right', vertical: 'top' }}
       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
     >
+      <MenuItem primaryText="Create Blog" onClick={onCreateBlog} />
       <MenuItem primaryText="Sign out" onClick={onLogout} />
     </IconMenu>
   );
@@ -26,8 +27,9 @@ const Navigation = ({ onLogout, onGoHome }) => {
       iconElementRight={<MenuItems />}
     />
   );
-}
+};
 Navigation.propTypes = {
+  onCreateBlog: PropTypes.func.isRequired,
   onLogout: PropTypes.func.isRequired,
   onGoHome: PropTypes.func.isRequired,
 };

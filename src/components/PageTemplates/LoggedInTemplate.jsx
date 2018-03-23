@@ -11,16 +11,17 @@ const TemplateContainer = styled.div`
   height: 100vh;
 `;
 
-const LoggedInTemplate = ({ children, home, logout }) => {
+const LoggedInTemplate = ({ children, createBlog, home, logout }) => {
   return (
     <TemplateContainer>
-      <Navigation onLogout={logout} onGoHome={home} />
+      <Navigation onLogout={logout} onGoHome={home} onCreateBlog={createBlog} />
       {children}
     </TemplateContainer>
   );
 };
 LoggedInTemplate.propTypes = {
   children: PropTypes.any,
+  createBlog: PropTypes.func.isRequired,
   home: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
 };
@@ -30,7 +31,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(logoutUser());
     dispatch(push('/login'));
   },
-  home: () => dispatch(push('/blogs'))
+  home: () => dispatch(push('/blogs')),
+  createBlog: () => dispatch(push('/blogs/new'))
 });
 
 export default connect(null, mapDispatchToProps)(LoggedInTemplate);
