@@ -1,32 +1,29 @@
-import {isNil} from 'ramda';
+import { isNil } from 'ramda';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 const SECRET = fs.readFileSync('private.key');
 
-import pg from './pg';
-import logger from '../logger';
-
-const toGithubDbUser = githubUser => ({
-  id: githubUser.id,
-  username: githubUser.login,
-  name: githubUser.name,
-  bio: githubUser.bio,
-  photo: githubUser.avatar_url,
-  access_token: jwt.sign({access_token: githubUser.access_token}, SECRET)
-});
+import db from 'server/db';
+import logger from 'server/logger';
 
 /**
  * Creates a new user
  * @param {object} githubUser The github user to create in bloomburger
  * @return {object} The newly created user
  */
-const create = (githubUser) => {
-  logger.log(`Creating github user with ID: ${githubUser.id}`);
-  const newUser = toGithubDbUser(githubUser);
-  return pg('bloomburger_user')
-    .insert(newUser)
-    .returning('*')
-    .then(createdUser => createdUser[0]);
+const create = ({ id, login, name, bio, avatar_url, access_token }) => {
+  logger.log(`Creating github user with ID: ${id}`);
+  const query = `
+  INSERT INTO
+    bloomburger_user(id, username, name, bio, photo, access_token)
+  VALUES
+    ($1, $2, $3, $4, $5, $6)
+  RETURNING
+    *;
+  `;
+  const signedAccessToken = jwt.sign({ access_token: access_token }, SECRET);
+  return db.query(query, [id, login, name, bio, avatar_url, signedAccessToken])
+    .then(res => res.rows[0]);
 };
 
 /**
@@ -34,12 +31,18 @@ const create = (githubUser) => {
  * @param {number} bloomburgerId The bloomburger user ID
  * @return {object} The user with the given bloomburger ID
  */
-const retrieve = (bloomburgerId) => {
+const retrieve = bloomburgerId => {
   logger.log(`Loading user with id: ${bloomburgerId}`);
-  return pg('bloomburger_user')
-    .where({id: bloomburgerId})
-    .select()
-    .then(users => isNil(users) ? null : users[0]);
+  const query = `
+  SELECT
+    bu.*
+  FROM
+    bloomburger_user bu
+  WHERE
+    bu.id = $1;
+  `;
+  return db.query(query, [bloomburgerId])
+    .then(res => isNil(res.rows) ? null : res.rows[0]);
 };
 
 /**
@@ -47,20 +50,26 @@ const retrieve = (bloomburgerId) => {
  * @param {object} githubUser The github user to update
  * @return {object} The updated user
  */
-const update = githubUser => {
-  logger.log(`Updating github user: ${githubUser.id}`);
-  const updateUser = toGithubDbUser(githubUser);
-  return pg('bloomburger_user')
-    .returning()
-    .where('id', '=', githubUser.id)
-    .update(updateUser)
-    .then(() => {
-      return pg('bloomburger_user')
-        .returning(['id', 'last_login'])
-        .where('id', '=', githubUser.id)
-        .update({id: githubUser.id})
-        .then(bloomburgerUsers => bloomburgerUsers[0]);
-    });
+const update = ({ id, login, name, bio, avatar_url, access_token }) => {
+  logger.log(`Updating github user: ${id}`);
+  const query = `
+  UPDATE
+    bloomburger_user
+  SET 
+    username = $2,
+    name = $3,
+    bio = $4,
+    photo = $5,
+    access_token = $6,
+    last_login = now()
+  WHERE
+    id = $1
+  RETURNING
+    *;
+  `;
+  const signedAccessToken = jwt.sign({ access_token: access_token }, SECRET);
+  return db.query(query, [id, login, name, bio, avatar_url, signedAccessToken])
+    .then(res => res.rows[0]);
 };
 
 /**
@@ -69,15 +78,11 @@ const update = githubUser => {
  * @return {object} The upserted user
  */
 const upsert = githubUser => {
-  return pg('bloomburger_user')
-    .where({id: githubUser.id})
-    .select()
-    .then(user => {
-      return isNil(user) || user.length <= 0 ?
-        create(githubUser) :
-        update(githubUser);
+  return retrieve(githubUser.id)
+    .then(existingUser => {
+      return isNil(existingUser) ? create(githubUser) : update(githubUser);
     });
 };
 
 
-export {create, retrieve, upsert};
+export { create, retrieve, upsert };

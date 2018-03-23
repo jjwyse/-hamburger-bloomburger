@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
+import {withRouter} from 'react-router';
 import WithBlogs from 'components/HoC/WithBlogs';
 import styled from 'styled-components';
 
@@ -22,7 +22,7 @@ const BlogPost = styled.div`
 
 class Blogs extends Component {
   render() {
-    const { blogs, router } = this.props;
+    const {blogs, router} = this.props;
     return (
       <Container>
         {blogs.map(blog => {
@@ -32,7 +32,7 @@ class Blogs extends Component {
               {blog.description && <h5>{blog.description}</h5>}
               <i>Author: {blog.author}</i>
             </BlogPost>
-          )
+          );
         })}
       </Container>
     );

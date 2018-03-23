@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { isNil } from 'ramda';
-import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import React, {Component} from 'react';
+import {isNil} from 'ramda';
+import {connect} from 'react-redux';
+import {push} from 'react-router-redux';
 import PropTypes from 'prop-types';
 import Markdown from 'react-markdown';
 import WithBlogs from 'components/HoC/WithBlogs';
@@ -33,7 +33,7 @@ const Content = styled.div`
 
 class Blog extends Component {
   render() {
-    const { blog, toBlogs } = this.props;
+    const {blog, toBlogs} = this.props;
 
     // didn't find this specific blog, so take back to main view
     if (isNil(blog)) {
@@ -62,7 +62,7 @@ Blog.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  toBlogs: () => dispatch(push('/blogs'))
+  toBlogs: () => dispatch(push('/blogs')),
 });
 
 export default connect(null, mapDispatchToProps)(WithBlogs(Blog));

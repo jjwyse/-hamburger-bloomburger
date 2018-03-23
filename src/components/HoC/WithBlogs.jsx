@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import { loadBlogs } from 'state/blogs';
+import {loadBlogs} from 'state/blogs';
 
 const WithBlogs = WrappedComponent => {
   class WithBlogsClass extends React.Component {
@@ -14,14 +14,14 @@ const WithBlogs = WrappedComponent => {
     };
 
     componentDidMount() {
-      const { isBlogsLoaded, load } = this.props;
+      const {isBlogsLoaded, load} = this.props;
       if (!isBlogsLoaded) {
         load();
       }
     }
 
     render() {
-      const { blogs, isBlogsLoaded, params } = this.props;
+      const {blogs, isBlogsLoaded, params} = this.props;
       const blog = params.blogId ? blogs.filter(b => b.id === params.blogId) : null;
       return isBlogsLoaded ? <WrappedComponent {...this.props} blogs={blogs} blog={blog ? blog[0] : null} /> : null;
     }
@@ -36,7 +36,7 @@ const WithBlogs = WrappedComponent => {
 
   const mapDispatchToProps = dispatch => {
     return {
-      load: () => dispatch(loadBlogs())
+      load: () => dispatch(loadBlogs()),
     };
   };
   return connect(mapStateToProps, mapDispatchToProps)(WithBlogsClass);

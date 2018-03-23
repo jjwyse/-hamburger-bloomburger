@@ -1,6 +1,6 @@
 import { isNil } from 'ramda';
-import pg from './pg';
-import logger from '../logger';
+import db from 'server/db';
+import logger from 'server/logger';
 
 /**
  * Retrieve paginated blogs for the given user
@@ -9,14 +9,20 @@ import logger from '../logger';
  */
 const retrieveAllForUser = (bloomburgerUserId, limit, offset) => {
   logger.log(`Loading blogs for user with id: ${bloomburgerUserId}`);
-  return pg('blog')
-    .join('user_x_blog', 'user_x_blog.blog_id', '=', 'blog.id')
-    .join('bloomburger_user', 'bloomburger_user.id', '=', 'blog.created_by')
-    .select('blog.*', 'bloomburger_user.username as author')
-    .where('user_x_blog.user_id', "=", bloomburgerUserId)
-    .limit(limit)
-    .offset(offset)
-    .then(blogs => isNil(blogs) ? [] : blogs);
+  const query = `
+  SELECT
+    b.*,
+    bu.username as author
+  FROM blog b
+    INNER JOIN user_x_blog uxb ON uxb.blog_id = b.id
+    INNER JOIN bloomburger_user bu on bu.id = b.created_by
+  WHERE
+    uxb.user_id = $1
+  LIMIT $2
+  OFFSET $3;
+  `;
+  return db.query(query, [bloomburgerUserId, limit, offset])
+    .then(res => isNil(res.rows) ? [] : res.rows);
 };
 
 

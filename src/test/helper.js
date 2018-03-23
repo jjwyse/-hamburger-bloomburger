@@ -1,4 +1,7 @@
 import jsdom from 'jsdom';
+import { configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+configure({ adapter: new Adapter() });
 
 const mockery = require('mockery');
 mockery.registerMock('properties', {
@@ -6,11 +9,6 @@ mockery.registerMock('properties', {
   githubClientSecret: '',
   redirectUri: 'http://localhost:3003/login',
   dbConnectionString: `postgres://${process.env.BLOOMBURGER_DB_USER}@${process.env.BLOOMBURGER_DB_HOST}:${process.env.BLOOMBURGER_DB_PORT}/bloomburger?connect_timeout=10&application_name=bloomburger`,
-});
-mockery.registerMock('server/db/pg', () => {
-  return {
-    insert: object => Promise.resolve(object),
-  };
 });
 mockery.enable({warnOnReplace: false, warnOnUnregistered: false});
 

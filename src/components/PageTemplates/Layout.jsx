@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { connect } from 'react-redux';
-import { isNil } from 'ramda';
-import { injectGlobal } from 'styled-components';
+import {connect} from 'react-redux';
+import {isNil} from 'ramda';
+import {injectGlobal} from 'styled-components';
 import styled from 'styled-components';
-import { clearAllAlerts } from 'state/notifications';
+import {clearAllAlerts} from 'state/notifications';
 import Snackbar from 'material-ui/Snackbar';
 import Mask from 'components/Mask/Mask';
 
@@ -66,14 +66,14 @@ injectGlobal`
 }
 `;
 
-const Alerts = styled(Snackbar) `
+const Alerts = styled(Snackbar)`
   div {
     color: white;
-    background-color: ${props => (props['data-alerttype'] === 'error' ? 'red' : 'green')} !important;
+    background-color: ${props => props['data-alerttype'] === 'error' ? 'red' : 'green'} !important;
   }
 `;
 
-const Layout = ({ alert, children, clearAlerts, mask }) => {
+const Layout = ({alert, children, clearAlerts, mask}) => {
   return (
     <App>
       <MuiThemeProvider>
@@ -108,6 +108,5 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   clearAlerts: () => dispatch(clearAllAlerts()),
 });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);

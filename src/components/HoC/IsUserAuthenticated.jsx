@@ -25,12 +25,12 @@ const IsUserAuthenticated = WrappedComponent => {
   }
 
   const mapStateToProps = state => ({
-    isAuthenticated: !isNil(state.authentication.user)
+    isAuthenticated: !isNil(state.authentication.user),
   });
 
   const mapDispatchToProps = dispatch => {
     return {
-      toLogin: () => dispatch(push('/login'))
+      toLogin: () => dispatch(push('/login')),
     };
   };
   return connect(mapStateToProps, mapDispatchToProps)(IsUserAuthenticatedClass);

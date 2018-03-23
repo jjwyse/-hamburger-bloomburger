@@ -3,11 +3,10 @@
 --------------------------------------------------------------------------------
 
 [![version](http://img.shields.io/badge/version-v0.0.1-blue.svg)](#) [![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/) [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
-[![Circle CI](https://circleci.com/gh/jjwyse/bloomburger.svg?style=shield)](https://circleci.com/gh/jjwyse/bloomburger)
 
 
 ## Overview
-Delivers the blogs you care about, right to your front door.
+The blogs you care about, and nothing more.
 
 
 ## Installation
