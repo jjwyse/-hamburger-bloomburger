@@ -1,26 +1,15 @@
 import { HTTP_REQUEST } from 'state/types';
 
 /* Constants */
-export const CREATED = 'BLOGS:CREATED';
-export const LOADED = 'BLOGS:LOADED';
+export const LOADED = 'GROUPS:LOADED';
 
 /* Actions */
-const createBlog = blog => ({
-  [HTTP_REQUEST]: {
-    method: 'POST',
-    endpoint: '/blogs',
-    payload: blog,
-    types: [CREATED],
-    message: 'Creating blog...',
-  },
-});
-
-const loadBlogs = () => ({
+const loadGroups = () => ({
   [HTTP_REQUEST]: {
     method: 'GET',
-    endpoint: '/blogs',
+    endpoint: '/groups',
     types: [LOADED],
-    message: 'Loading blogs...',
+    message: 'Loading groups...',
   },
 });
 
@@ -35,4 +24,4 @@ const reducer = (state = initialState, { type, payload }) => {
   }
 };
 
-export { reducer, createBlog, loadBlogs };
+export { reducer, loadGroups };

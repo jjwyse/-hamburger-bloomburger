@@ -7,6 +7,7 @@ import { isNil } from 'ramda';
 import { upsert } from './db/user';
 import logger from './logger';
 import blogs from './api/blogs';
+import groups from './api/groups';
 
 const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
 const SECRET = fs.readFileSync('private.key');
@@ -131,8 +132,8 @@ const init = expressApp => {
   // authentication APIs
   expressApp.post('/api/v1/oauth', authenticate);
 
-  // setup blog APIs
   blogs(expressApp, authMiddleware);
+  groups(expressApp, authMiddleware);
 };
 
 export default init;

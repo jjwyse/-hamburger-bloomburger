@@ -11,11 +11,13 @@ import httpMiddleware from 'state/middleware/http';
 import {reducer as authentication} from 'state/authentication';
 import {reducer as notifications} from 'state/notifications';
 import {reducer as blogs} from 'state/blogs';
+import {reducer as groups} from 'state/groups';
 
 export const rootReducer = combineReducers({
   authentication,
   notifications,
   blogs,
+  groups,
   routing,
 });
 

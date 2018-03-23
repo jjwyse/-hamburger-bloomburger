@@ -1,5 +1,5 @@
 import {invalidate, load, save} from 'util/storage';
-import {CALL_API} from 'state/types';
+import {HTTP_REQUEST} from 'state/types';
 
 /* Constants */
 export const LOGGED_IN = 'AUTHENTICATION:LOGGED_IN';
@@ -7,7 +7,7 @@ export const LOGGED_OUT = 'AUTHENTICATION:LOGGED_OUT';
 
 /* Actions */
 const oauthLogin = (state, code) => ({
-  [CALL_API]: {
+  [HTTP_REQUEST]: {
     method: 'POST',
     endpoint: '/oauth',
     types: [LOGGED_IN],

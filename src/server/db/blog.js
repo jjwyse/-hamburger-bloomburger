@@ -1,6 +1,6 @@
 import { isNil } from 'ramda';
-import db from 'server/db';
-import logger from 'server/logger';
+import db from '../db';
+import logger from '../logger';
 
 /**
  * Retrieve paginated blogs for the given user

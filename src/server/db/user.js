@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 const SECRET = fs.readFileSync('private.key');
 
-import db from 'server/db';
-import logger from 'server/logger';
+import db from '../db';
+import logger from '../logger';
 
 /**
  * Creates a new user

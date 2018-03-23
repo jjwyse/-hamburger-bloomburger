@@ -5,7 +5,7 @@
 import fetch from 'isomorphic-fetch';
 import {isNil, merge, pipe, reject} from 'ramda';
 import {stringify} from 'querystring';
-import {CALL_API, NOTIFICATIONS_ALERT, NOTIFICATIONS_MASK, NOTIFICATIONS_MASK_REMOVE} from 'state/types';
+import {HTTP_REQUEST, NOTIFICATIONS_ALERT, NOTIFICATIONS_MASK, NOTIFICATIONS_MASK_REMOVE} from 'state/types';
 import {loadToken} from 'util/storage';
 
 const createActionOfUnkownType = (actionType, options = {}) => {
@@ -22,7 +22,7 @@ const createActionOfUnkownType = (actionType, options = {}) => {
 };
 
 const httpMiddleware = store => next => action => {
-  const httpCall = action[CALL_API];
+  const httpCall = action[HTTP_REQUEST];
 
   if (isNil(httpCall)) {
     return next(action);
