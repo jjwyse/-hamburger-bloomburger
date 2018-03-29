@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FontIcon from 'material-ui/FontIcon';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import WithBlogs from 'components/HoC/WithBlogs';
@@ -45,6 +46,7 @@ const Groups = styled.ul`
 `;
 
 const Group = styled.li`
+  display: flex;
   margin: 5px 0 5px 0;
   cursor: pointer;
 `;
@@ -70,7 +72,10 @@ class Blogs extends Component {
           <Groups>
             {groups.map(group => {
               return (
-                <Group>{group.name}</Group>
+                <Group>
+                  {group.is_member && <FontIcon className="material-icons">flight_takeoff</FontIcon>}
+                  <p>{group.name}</p>
+                </Group>
               );
             })}
           </Groups>
